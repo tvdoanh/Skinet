@@ -11,10 +11,28 @@ namespace Infrastructure.Data
         {
             var query = inputQuery;
 
-            if(spec.Criteria != null)
+            if (spec.Criteria != null)
             {
                 query = query.Where(spec.Criteria);
             }
+
+            // Sorting
+            if (spec.OrderBy != null)
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if (spec.OrderByDescending != null)
+            {
+                query = query.OrderByDescending(spec.OrderByDescending);
+            }
+
+            // Pagination
+            if(spec.IsPagingEnable)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
+
 
             query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
 
